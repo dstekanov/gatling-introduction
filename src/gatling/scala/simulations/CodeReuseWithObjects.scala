@@ -15,9 +15,11 @@ class CodeReuseWithObjects extends BaseSimulation {
     .exec(getAllVideoGames)
 
   def getAllVideoGames: ChainBuilder = {
-    exec(http("Get All Video Games")
-      .get("videogames")
-      .check(status.is(200)))
+    repeat(3) {
+      exec(http("Get All Video Games")
+        .get("videogames")
+        .check(status.is(200)))
+    }
   }
 
   def getSpecificVideoGame(gameId: Long): ChainBuilder = {
