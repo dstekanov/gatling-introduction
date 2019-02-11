@@ -10,3 +10,5 @@ gen_java
 build
 bin
 results
+out
+classes
