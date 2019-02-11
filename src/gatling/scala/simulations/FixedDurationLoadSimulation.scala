@@ -5,14 +5,9 @@ import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 
-class RampUsersLoadSimulation extends BaseSimulation {
+import scala.concurrent.duration.DurationInt
 
-  val scn = scenario("Video Game DB")
-    .exec(getAllVideoGames)
-    .pause(5)
-    .exec(getSpecificVideoGame(2))
-    .pause(5)
-    .exec(getAllVideoGames)
+class FixedDurationLoadSimulation extends BaseSimulation {
 
   def getAllVideoGames: ChainBuilder = {
     exec(http("Get All Video Games")
@@ -26,10 +21,20 @@ class RampUsersLoadSimulation extends BaseSimulation {
       .check(status.in(200 to 201)))
   }
 
+  val scn = scenario("Video Game DB")
+    .forever() {
+      exec(getAllVideoGames)
+        .pause(5)
+        .exec(getSpecificVideoGame(2))
+        .pause(5)
+        .exec(getAllVideoGames)
+    }
+
   setUp(
     scn.inject(
-      nothingFor(5),
-      rampUsersPerSec(1) to 5 during 20
-    )
-  ).protocols(httpConf.inferHtmlResources())
+      nothingFor(5 seconds),
+      atOnceUsers(10),
+      rampUsers(50) during (30 seconds)
+    ).protocols(httpConf.inferHtmlResources())
+  ).maxDuration(1 minute)
 }
