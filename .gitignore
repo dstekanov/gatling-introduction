@@ -6,9 +6,9 @@
 .DS_Store
 .cache
 *.iml
-gen_java
 build
 bin
 results
 out
 classes
+target
