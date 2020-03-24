@@ -7,30 +7,30 @@ import io.gatling.http.Predef._
 
 class BasicLoadSimulation extends BaseSimulation {
 
-  val scn = scenario("Video Game DB")
-    .exec(getAllVideoGames)
+  val scn = scenario("Computer DB")
+    .exec(getAllComputers)
     .pause(5)
-    .exec(getSpecificVideoGame(2))
+    .exec(getSpecificComputer(2))
     .pause(5)
-    .exec(getAllVideoGames)
+    .exec(getAllComputers)
 
-  def getAllVideoGames: ChainBuilder = {
-    exec(http("Get All Video Games")
-      .get("videogames")
+  def getAllComputers: ChainBuilder = {
+    exec(http("Check Computer DB")
+      .get("/")
       .check(status.is(200)))
   }
 
-  def getSpecificVideoGame(gameId: Long): ChainBuilder = {
+  def getSpecificComputer(gameId: Long): ChainBuilder = {
     exec(http("Get Specific Game")
-      .get(s"videogames/$gameId")
+      .get(s"/computers/$gameId")
       .check(status.in(200 to 201)))
   }
 
   setUp(
     scn.inject(
-      nothingFor(5),
-      atOnceUsers(10),
-      rampUsers(10) during 5
+      nothingFor(2),
+      atOnceUsers(2),
+      rampUsers(1) during 5
     )
   ).protocols(httpConf /*.inferHtmlResources()*/)
 }

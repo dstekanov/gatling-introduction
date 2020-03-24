@@ -2,6 +2,7 @@ package com.symbology.config
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import io.gatling.http.protocol.HttpProtocolBuilder
 
 class BaseSimulation extends Simulation {
 
@@ -10,10 +11,10 @@ class BaseSimulation extends Simulation {
   val testDuration: Int = getProperty("DURATION", "60").toInt
 
   // 1 Common HTTP Configuration
-  val httpConf = http
-    .baseUrl("http://computer-database.gatling.io/")
+  val httpConf: HttpProtocolBuilder = http
+    // https://gatling.io/docs/current/quickstart
+    .baseUrl("http://computer-database.gatling.io")
     .header("Accept", "application/json")
-  //    .proxy(Proxy("localhost", 8888).httpsPort(8888))
 
   after {
     println("Stress test completed.")
