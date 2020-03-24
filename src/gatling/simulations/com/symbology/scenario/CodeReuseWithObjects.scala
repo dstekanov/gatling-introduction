@@ -1,23 +1,25 @@
-package simulations
+package com.symbology.scenario
 
-import config.BaseSimulation
+import com.symbology.config.BaseSimulation
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 
-class BasicLoadSimulation extends BaseSimulation {
+class CodeReuseWithObjects extends BaseSimulation {
 
   val scn = scenario("Video Game DB")
     .exec(getAllVideoGames)
     .pause(5)
-    .exec(getSpecificVideoGame(2))
+    .exec(getSpecificVideoGame(1))
     .pause(5)
     .exec(getAllVideoGames)
 
   def getAllVideoGames: ChainBuilder = {
-    exec(http("Get All Video Games")
-      .get("videogames")
-      .check(status.is(200)))
+    repeat(3) {
+      exec(http("Get All Video Games")
+        .get("videogames")
+        .check(status.is(200)))
+    }
   }
 
   def getSpecificVideoGame(gameId: Long): ChainBuilder = {
@@ -27,10 +29,6 @@ class BasicLoadSimulation extends BaseSimulation {
   }
 
   setUp(
-    scn.inject(
-      nothingFor(5),
-      atOnceUsers(10),
-      rampUsers(10) during 5
-    )
-  ).protocols(httpConf /*.inferHtmlResources()*/)
+    scn.inject(atOnceUsers(1))
+  ).protocols(httpConf)
 }

@@ -1,6 +1,6 @@
-package simulations
+package com.symbology.scenario
 
-import config.BaseSimulation
+import com.symbology.config.BaseSimulation
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._

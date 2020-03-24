@@ -1,7 +1,9 @@
+package com.symbology
 
+
+import com.symbology.scenario.AddPauseTime
 import io.gatling.app.Gatling
 import io.gatling.core.config.GatlingPropertiesBuilder
-import simulations.AddPauseTime
 
 object GatlingRunner {
 
